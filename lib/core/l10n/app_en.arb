@@ -1,0 +1,163 @@
+{
+  "@@locale": "en",
+  "appTitle": "Codedly",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue button label"
+  },
+  "backButton": "Back",
+  "@backButton": {
+    "description": "Back button label"
+  },
+  "submitButton": "Submit",
+  "@submitButton": {
+    "description": "Submit button label"
+  },
+  "cancelButton": "Cancel",
+  "@cancelButton": {
+    "description": "Cancel button label"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Try again button label"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading indicator text"
+  },
+  "networkError": "Network connection error. Please check your internet connection and try again.",
+  "@networkError": {
+    "description": "Error message when network is unavailable"
+  },
+  "invalidInput": "Invalid input. Please check and try again.",
+  "@invalidInput": {
+    "description": "Generic validation error message"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Sign up button text"
+  },
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Sign out button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "displayName": "Display Name",
+  "@displayName": {
+    "description": "Display name field label"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "emailRequired": "Email is required",
+  "@emailRequired": {
+    "description": "Email validation error"
+  },
+  "invalidEmail": "Invalid email format",
+  "@invalidEmail": {
+    "description": "Invalid email error"
+  },
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {
+    "description": "Password validation error"
+  },
+  "passwordTooShort": "Password must be at least 8 characters",
+  "@passwordTooShort": {
+    "description": "Password length error"
+  },
+  "nameRequired": "Display name is required",
+  "@nameRequired": {
+    "description": "Display name validation error"
+  },
+  "nameTooShort": "Display name must be at least 2 characters",
+  "@nameTooShort": {
+    "description": "Display name too short error"
+  },
+  "nameTooLong": "Display name must be at most 30 characters",
+  "@nameTooLong": {
+    "description": "Display name too long error"
+  },
+  "lessons": "Lessons",
+  "@lessons": {
+    "description": "Lessons tab label"
+  },
+  "practice": "Practice",
+  "@practice": {
+    "description": "Practice tab label"
+  },
+  "leaderboard": "Leaderboard",
+  "@leaderboard": {
+    "description": "Leaderboard tab label"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile tab label"
+  },
+  "level": "Level",
+  "@level": {
+    "description": "Level label"
+  },
+  "xp": "XP",
+  "@xp": {
+    "description": "Experience points abbreviation"
+  },
+  "streak": "Streak",
+  "@streak": {
+    "description": "Streak label"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Days unit"
+  },
+  "startQuiz": "Start Quiz",
+  "@startQuiz": {
+    "description": "Start quiz button"
+  },
+  "checkAnswer": "Check Answer",
+  "@checkAnswer": {
+    "description": "Check answer button"
+  },
+  "nextQuestion": "Next Question",
+  "@nextQuestion": {
+    "description": "Next question button"
+  },
+  "complete": "Complete",
+  "@complete": {
+    "description": "Complete button"
+  },
+  "correct": "Correct!",
+  "@correct": {
+    "description": "Correct answer feedback"
+  },
+  "incorrect": "Incorrect",
+  "@incorrect": {
+    "description": "Incorrect answer feedback"
+  },
+  "score": "Score",
+  "@score": {
+    "description": "Score label"
+  },
+  "congratulations": "Congratulations!",
+  "@congratulations": {
+    "description": "Congratulations message"
+  }
+}

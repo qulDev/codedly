@@ -53,6 +53,7 @@ app.*.map.json
 *.g.dart
 *.config.dart
 *.freezed.dart
+lib/core/l10n/generated/
 
 # Hive
 *.hive
