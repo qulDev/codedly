@@ -6,12 +6,9 @@ import 'package:codedly/features/lessons/presentation/providers/lessons_provider
 import 'package:codedly/features/lessons/presentation/providers/lessons_state.dart';
 
 String _parseText(String content) {
-  // Handle newlines (\n) by converting them into line breaks
   content = content.replaceAll(r'\n', '\n');
-
-  // Automatically identify code snippets wrapped in backticks and return styled version
   content = content.replaceAllMapped(
-    RegExp(r'`(.*?)`'), // Matches text between backticks
+    RegExp(r'`(.*?)`'),
     (match) {
       return '<code>${match.group(1)}</code>';
     },
@@ -19,7 +16,7 @@ String _parseText(String content) {
 
   return content;
 }
-
+// // # Variabel\n\nVariabel menyimpan nilai. Buat variabel bernama `age` dan atur ke 15.\n\nKemudian cetak: "I am 15 years old"
 class LessonDetailScreen extends ConsumerStatefulWidget {
   final int lessonIndex;
 
@@ -101,7 +98,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                 children: [
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: AppColors.textPrimary,
                         height: 1.5,
@@ -112,11 +109,11 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      Icon(Icons.stars, size: 20, color: AppColors.xpGold),
+                      const Icon(Icons.stars, size: 20, color: AppColors.xpGold),
                       const SizedBox(width: 8),
                       Text(
                         '${lesson.xpReward} XP Reward',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: AppColors.xpGold,
@@ -139,11 +136,11 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     color: AppColors.surfaceVariant,
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(Icons.code, color: AppColors.primary),
-                        const SizedBox(width: 8),
-                        const Text(
+                        SizedBox(width: 8),
+                        Text(
                           'Python Editor',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -158,16 +155,16 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                       controller: _codeController,
                       maxLines: null,
                       expands: true,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'monospace',
                         fontSize: 14,
                         color: AppColors.textPrimary,
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Write your Python code here...',
                         hintStyle: TextStyle(color: AppColors.textSecondary),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(16),
+                        contentPadding: EdgeInsets.all(16),
                       ),
                     ),
                   ),
@@ -261,27 +258,62 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
   
  TextSpan _buildText(String content) {
     final spans = <TextSpan>[];
-    final codeRegex = RegExp(r'<code>(.*?)<\/code>'); // Regex to detect <code> tags
-    final segments = content.split(codeRegex);
+    final codeRegex = RegExp(r'<code>(.*?)</code>');
+    int lastMatchEnd = 0;
+    final matches = codeRegex.allMatches(content);
+    for (final match in matches) {
+      // Add normal text before the code
+      if (match.start > lastMatchEnd) {
+        final normalText = content.substring(lastMatchEnd, match.start);
+        spans.addAll(_highlightQuotes(normalText));
+      }
+      // Add code snippet
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 16,
+          color: Colors.blueAccent,
+          fontWeight: FontWeight.w100
+        ),
+      ));
+      lastMatchEnd = match.end;
+    }
+    // Add any remaining normal text after the last code
+    if (lastMatchEnd < content.length) {
+      final normalText = content.substring(lastMatchEnd);
+      spans.addAll(_highlightQuotes(normalText));
+    }
+    return TextSpan(children: spans);
+  }
 
-    for (var i = 0; i < segments.length; i++) {
-      if (i.isEven) {
+  List<TextSpan> _highlightQuotes(String text) {
+    final spans = <TextSpan>[];
+    final quoteRegex = RegExp(r'"([^"]*)"');
+    int lastEnd = 0;
+    for (final match in quoteRegex.allMatches(text)) {
+      if (match.start > lastEnd) {
         spans.add(TextSpan(
-          text: segments[i],
-          style: TextStyle(fontSize: 16, color: Colors.white),
-        ));
-      } else {
-        spans.add(TextSpan(
-          text: segments[i],
-          style: TextStyle(
-            fontFamily: 'monospace',
-            fontSize: 16,
-            color: Colors.blueAccent,
-          ),
+          text: text.substring(lastEnd, match.start),
+          style: const TextStyle(fontSize: 16, color: Colors.white),
         ));
       }
+      spans.add(TextSpan(
+        text: '"${match.group(1)}"',
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.orange,
+          fontWeight: FontWeight.bold,
+        ),
+      ));
+      lastEnd = match.end;
     }
-
-    return TextSpan(children: spans);
+    if (lastEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastEnd),
+        style: const TextStyle(fontSize: 16, color: Colors.white),
+      ));
+    }
+    return spans;
   }
 }
