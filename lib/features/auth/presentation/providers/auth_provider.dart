@@ -1,3 +1,4 @@
+import 'package:codedly/features/auth/domain/entities/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:codedly/core/di/injection.dart';
 import 'package:codedly/features/auth/domain/usecases/get_current_user.dart';
@@ -6,7 +7,7 @@ import 'package:codedly/features/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:codedly/features/auth/domain/usecases/sign_out.dart';
 import 'package:codedly/features/auth/domain/usecases/sign_up_with_email.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_state.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 /// Auth state notifier provider
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(
@@ -38,7 +39,46 @@ class AuthNotifier extends StateNotifier<AuthState> {
        _signOut = signOut,
        super(const AuthState.initial()) {
     checkAuthStatus();
+     // Listener untuk menangani Google OAuth setelah redirect
+      supa.Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
+    final session = data.session;
+    if (session != null) {
+      await loadUserFromSupabase(); // update state ke authenticated
+    } else {
+      state = const AuthState.unauthenticated();
+    }
+  });
   }
+
+  Future<void> loadUserFromSupabase() async {
+  final supaUser = supa.Supabase.instance.client.auth.currentUser;
+  if (supaUser == null) {
+    state = const AuthState.unauthenticated();
+    return;
+  }
+
+  final meta = supaUser.userMetadata ?? {};
+
+  final createdAt = () {
+    try {
+      return DateTime.parse(meta['created_at'] ?? supaUser.createdAt ?? DateTime.now().toIso8601String());
+    } catch (_) {
+      return DateTime.now();
+    }
+  }();
+
+  final user = User(
+    id: supaUser.id,
+    email: supaUser.email ?? '',
+    displayName: meta['full_name'] ?? meta['name'] ?? meta['user_name'],
+    languagePreference: meta['language_preference'] ?? "en",
+    onboardingCompleted: meta['onboarding_completed'] ?? false,
+    createdAt: createdAt,
+  );
+
+  state = AuthState.authenticated(user);
+}
+
 
   /// Check current authentication status
   Future<void> checkAuthStatus() async {

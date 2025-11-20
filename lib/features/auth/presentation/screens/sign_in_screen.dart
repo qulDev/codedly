@@ -175,9 +175,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       // Google Sign In
                       OutlinedButton.icon(
                         onPressed: () async {
-                          await ref
-                              .read(authProvider.notifier)
-                              .signInWithGoogle();
+                        await ref.read(authProvider.notifier).signInWithGoogle();
+
 
                           // Check if sign in was successful
                           if (context.mounted) {
