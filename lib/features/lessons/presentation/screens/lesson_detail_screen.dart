@@ -34,11 +34,12 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
   void initState() {
     super.initState();
     _codeController = TextEditingController();
-    // Set initial code template
+    // Set initial code template and preprocess \n
     Future.microtask(() {
       final lesson = ref.read(lessonsProvider).currentLesson;
       if (lesson?.codeTemplate != null) {
-        _codeController.text = lesson!.codeTemplate!;
+        // Replace all occurrences of literal '\n' with actual newlines
+        _codeController.text = lesson!.codeTemplate!.replaceAll(r'\n', '\n');
       }
     });
   }
@@ -295,7 +296,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
       if (match.start > lastEnd) {
         spans.add(TextSpan(
           text: text.substring(lastEnd, match.start),
-          style: const TextStyle(fontSize: 16, color: Colors.white),
+          style: const TextStyle(fontSize: 16, color: AppColors.textPrimary),
         ));
       }
       spans.add(TextSpan(
