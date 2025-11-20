@@ -65,11 +65,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _completeOnboarding() async {
-    // Update user profile to mark onboarding as completed
     final authRepo = getIt<AuthRepository>();
     await authRepo.updateProfile(onboardingCompleted: true);
 
-    // Navigate will be handled by auth state change
+    // Navigate to home screen after completing onboarding
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
   }
 
   @override
