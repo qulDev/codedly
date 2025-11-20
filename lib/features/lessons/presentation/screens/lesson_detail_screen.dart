@@ -5,6 +5,21 @@ import 'package:codedly/features/auth/presentation/providers/auth_provider.dart'
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_state.dart';
 
+String _parseText(String content) {
+  // Handle newlines (\n) by converting them into line breaks
+  content = content.replaceAll(r'\n', '\n');
+
+  // Automatically identify code snippets wrapped in backticks and return styled version
+  content = content.replaceAllMapped(
+    RegExp(r'`(.*?)`'), // Matches text between backticks
+    (match) {
+      return '<code>${match.group(1)}</code>';
+    },
+  );
+
+  return content;
+}
+
 class LessonDetailScreen extends ConsumerStatefulWidget {
   final int lessonIndex;
 
@@ -16,6 +31,7 @@ class LessonDetailScreen extends ConsumerStatefulWidget {
 
 class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
   late TextEditingController _codeController;
+  late final String lessonContent;
 
   @override
   void initState() {
@@ -42,6 +58,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
     final lessonsState = ref.watch(lessonsProvider);
     final languageCode = authState.user?.languagePreference ?? 'en';
     final lesson = lessonsState.currentLesson;
+    final lessonContent = _parseText(lesson?.getContent(languageCode) ?? '');
 
     if (lesson == null) {
       return Scaffold(
@@ -82,12 +99,14 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    lesson.getContent(languageCode),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.textPrimary,
-                      height: 1.5,
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.textPrimary,
+                        height: 1.5,
+                      ),
+                      children: _buildText(lessonContent).children,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -238,5 +257,31 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
         ],
       ),
     );
+  }
+  
+ TextSpan _buildText(String content) {
+    final spans = <TextSpan>[];
+    final codeRegex = RegExp(r'<code>(.*?)<\/code>'); // Regex to detect <code> tags
+    final segments = content.split(codeRegex);
+
+    for (var i = 0; i < segments.length; i++) {
+      if (i.isEven) {
+        spans.add(TextSpan(
+          text: segments[i],
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ));
+      } else {
+        spans.add(TextSpan(
+          text: segments[i],
+          style: TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 16,
+            color: Colors.blueAccent,
+          ),
+        ));
+      }
+    }
+
+    return TextSpan(children: spans);
   }
 }
