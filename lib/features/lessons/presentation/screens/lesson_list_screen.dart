@@ -48,7 +48,7 @@ class _LessonListScreenState extends ConsumerState<LessonListScreen> {
               lessonsState.lessons.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : lessonsState.lessons.isEmpty
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -57,7 +57,7 @@ class _LessonListScreenState extends ConsumerState<LessonListScreen> {
                     size: 64,
                     color: AppColors.textSecondary,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'No lessons available yet',
                     style: TextStyle(
@@ -72,7 +72,8 @@ class _LessonListScreenState extends ConsumerState<LessonListScreen> {
               padding: const EdgeInsets.all(16),
               itemCount: lessonsState.lessons.length,
               itemBuilder: (context, index) {
-                final lesson = lessonsState.lessons[index];
+                final lesson = lessonsState
+                    .lessons[lessonsState.lessons.length - 1 - index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: _LessonCard(
@@ -83,12 +84,16 @@ class _LessonListScreenState extends ConsumerState<LessonListScreen> {
                     onTap: () {
                       ref
                           .read(lessonsProvider.notifier)
-                          .setCurrentLesson(index);
+                          .setCurrentLesson(
+                            lessonsState.lessons.length - 1 - index,
+                          );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              LessonDetailScreen(lessonIndex: index),
+                          builder: (context) => LessonDetailScreen(
+                            lessonIndex:
+                                lessonsState.lessons.length - 1 - index,
+                          ),
                         ),
                       );
                     },
