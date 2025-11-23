@@ -7,6 +7,7 @@ import 'package:codedly/features/stats/presentation/providers/stats_provider.dar
 import 'package:codedly/features/stats/presentation/providers/stats_state.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
+import 'package:codedly/features/profile/presentation/screens/profile_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -52,7 +53,12 @@ class HomeScreen extends ConsumerWidget {
                   IconButton(
                     icon: const Icon(Icons.person),
                     onPressed: () {
-                      // TODO: Navigate to profile
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -250,13 +256,18 @@ class HomeScreen extends ConsumerWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            // Lessons tab - navigate to modules
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ModulesScreen()),
             );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfileScreen(),
+              ),
+            );
           } else {
-            // Other tabs - coming soon
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
             );
