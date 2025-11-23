@@ -1,22 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+
 import 'package:codedly/core/di/injection.dart';
 import 'package:codedly/core/usecases/usecase.dart';
 import 'package:codedly/features/lessons/domain/usecases/get_modules.dart';
 import 'package:codedly/features/lessons/domain/usecases/get_lessons.dart';
 import 'package:codedly/features/lessons/domain/usecases/complete_lesson.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_state.dart';
+import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
 
 /// Notifier for lessons and modules state.
 class LessonsNotifier extends StateNotifier<LessonsState> {
   final GetModules getModulesUseCase;
   final GetLessons getLessonsUseCase;
   final CompleteLesson completeLessonUseCase;
+  final Ref _ref;
 
   LessonsNotifier({
     required this.getModulesUseCase,
     required this.getLessonsUseCase,
     required this.completeLessonUseCase,
-  }) : super(const LessonsState()) {
+    required Ref ref,
+  }) : _ref = ref,
+       super(const LessonsState()) {
     loadModules();
   }
 
@@ -89,11 +95,28 @@ class LessonsNotifier extends StateNotifier<LessonsState> {
           return lesson;
         }).toList();
 
+        final updatedModules = state.modules.map((module) {
+          if (module.id == state.currentLesson!.moduleId) {
+            final newCompleted = module.lessonsCompleted + 1;
+            final cappedCompleted = module.totalLessons == 0
+                ? newCompleted
+                : newCompleted > module.totalLessons
+                ? module.totalLessons
+                : newCompleted;
+            return module.copyWith(lessonsCompleted: cappedCompleted);
+          }
+          return module;
+        }).toList();
+
         state = state.copyWith(
           status: LessonsStatus.completed,
           lessons: updatedLessons,
+          modules: updatedModules,
           currentLesson: state.currentLesson!.copyWith(isCompleted: true),
         );
+
+        // Refresh aggregated stats so Profile/Home progress stays in sync
+        unawaited(_ref.read(statsProvider.notifier).refreshStats());
       },
     );
   }
@@ -112,5 +135,6 @@ final lessonsProvider = StateNotifierProvider<LessonsNotifier, LessonsState>((
     getModulesUseCase: getIt<GetModules>(),
     getLessonsUseCase: getIt<GetLessons>(),
     completeLessonUseCase: getIt<CompleteLesson>(),
+    ref: ref,
   );
 });
