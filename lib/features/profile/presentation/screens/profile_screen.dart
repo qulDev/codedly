@@ -1,5 +1,6 @@
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
+import 'package:codedly/features/home/presentation/screens/home_screen.dart';
 import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_provider.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_state.dart';
@@ -165,7 +166,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: 3,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Lessons'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Practice'),
           BottomNavigationBarItem(
             icon: Icon(Icons.leaderboard),
@@ -178,7 +179,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ModulesScreen()),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(

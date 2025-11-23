@@ -96,6 +96,10 @@
   "@nameTooLong": {
     "description": "Display name too long error"
   },
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
   "lessons": "Lessons",
   "@lessons": {
     "description": "Lessons tab label"

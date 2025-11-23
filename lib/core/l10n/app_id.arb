@@ -24,6 +24,7 @@
   "nameRequired": "Nama tampilan wajib diisi",
   "nameTooShort": "Nama tampilan minimal 2 karakter",
   "nameTooLong": "Nama tampilan maksimal 30 karakter",
+  "home": "beranda",
   "lessons": "Pelajaran",
   "practice": "Latihan",
   "leaderboard": "Papan Peringkat",
