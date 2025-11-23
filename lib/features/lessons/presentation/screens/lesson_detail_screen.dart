@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_python_bridge/flutter_python_bridge.dart' show PythonBridge;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
-import 'package:codedly/features/lessons/presentation/providers/lessons_state.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-String _parseText(String content) {
-  content = content.replaceAll(r'\n', '\n');
-  content = content.replaceAllMapped(
-    RegExp(r'`(.*?)`'),
-    (match) {
-      return '<code>${match.group(1)}</code>';
-    },
-  );
-
-  return content;
-}
-// // # Variabel\n\nVariabel menyimpan nilai. Buat variabel bernama `age` dan atur ke 15.\n\nKemudian cetak: "I am 15 years old"
 class LessonDetailScreen extends ConsumerStatefulWidget {
   final int lessonIndex;
 
@@ -28,19 +19,27 @@ class LessonDetailScreen extends ConsumerStatefulWidget {
 
 class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
   late TextEditingController _codeController;
+  PythonBridge? pythonBridge;
   late final String lessonContent;
+  String _output = '';
+  bool _isRunning = false;
+  bool _isCompleted = false;
 
   @override
   void initState() {
     super.initState();
     _codeController = TextEditingController();
-    // Set initial code template and preprocess \n
+    
+    if (!kIsWeb) {
+      pythonBridge = PythonBridge();
+    }
+    
     Future.microtask(() {
       final lesson = ref.read(lessonsProvider).currentLesson;
       if (lesson?.codeTemplate != null) {
-        // Replace all occurrences of literal '\n' with actual newlines
         _codeController.text = lesson!.codeTemplate!.replaceAll(r'\n', '\n');
       }
+      _isCompleted = lesson?.isCompleted ?? false;
     });
   }
 
@@ -48,6 +47,115 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
   void dispose() {
     _codeController.dispose();
     super.dispose();
+  }
+
+  Future<Object> _executePythonCode(String code) async {
+    if (kIsWeb) {
+      return await _executePythonOnline(code);
+    } else {
+      return await pythonBridge!.runCode(code);
+    }
+  }
+
+  Future<String> _executePythonOnline(String code) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://emkc.org/api/v2/piston/execute'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'language': 'python',
+          'version': '3.10.0',
+          'files': [
+            {
+              'content': code,
+            }
+          ],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        final output = result['run']['output'] ?? '';
+        final stderr = result['run']['stderr'] ?? '';
+        return stderr.isEmpty ? output : 'Error: $stderr';
+      } else {
+        return 'Error: Failed to execute code (${response.statusCode})';
+      }
+    } catch (e) {
+      return 'Error: $e';
+    }
+  }
+
+  Future<void> _runPythonCode() async {
+    setState(() {
+      _isRunning = true;
+      _output = '';
+    });
+
+    try {
+      final lesson = ref.read(lessonsProvider).currentLesson;
+      if (lesson == null) return;
+
+      final result = await _executePythonCode(_codeController.text);
+      
+      setState(() {
+        _output = result.toString();
+      });
+
+      // Compare output with expected output
+      final expectedOutput = lesson.expectedOutput?.trim() ?? '';
+      final actualOutput = result.toString().trim();
+
+      if (actualOutput == expectedOutput) {
+        // Code is correct, complete the lesson
+        await ref.read(lessonsProvider.notifier).completeCurrentLesson();
+        
+        setState(() {
+          _isCompleted = true;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '🎉 Lesson completed! +${lesson.xpReward} XP',
+              ),
+              backgroundColor: AppColors.primary,
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('❌ Output doesn\'t match expected result. Try again!'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _output = 'Error: $e';
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error running code: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isRunning = false;
+      });
+    }
+  }
+
+  void _handleNextLesson() {
+    Navigator.pop(context);
+    // The lessons screen will automatically show the next lesson
   }
 
   @override
@@ -76,7 +184,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
         backgroundColor: AppColors.surface,
         elevation: 0,
         actions: [
-          if (lesson.isCompleted)
+          if (_isCompleted)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Chip(
@@ -169,6 +277,45 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                       ),
                     ),
                   ),
+                  // Output Display
+                  if (_output.isNotEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: AppColors.background,
+                        border: Border(
+                          top: BorderSide(color: AppColors.surfaceVariant),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.terminal, size: 16, color: AppColors.primary),
+                              SizedBox(width: 8),
+                              Text(
+                                'Output:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _output,
+                            style: const TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -183,7 +330,6 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // TODO: Show hints
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Hints feature coming soon! 💡'),
@@ -194,7 +340,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                     label: const Text('Hint'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.warning,
-                      side: BorderSide(color: AppColors.warning),
+                      side: const BorderSide(color: AppColors.warning),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
@@ -202,30 +348,10 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: lessonsState.status == LessonsStatus.completing
+                    onPressed: _isRunning
                         ? null
-                        : () async {
-                            // TODO: Validate code first
-                            // For now, just complete the lesson
-                            await ref
-                                .read(lessonsProvider.notifier)
-                                .completeCurrentLesson();
-
-                            if (lessonsState.status ==
-                                    LessonsStatus.completed &&
-                                mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    '🎉 Lesson completed! +${lesson.xpReward} XP',
-                                  ),
-                                  backgroundColor: AppColors.primary,
-                                ),
-                              );
-                              Navigator.pop(context);
-                            }
-                          },
-                    icon: lessonsState.status == LessonsStatus.completing
+                        : (_isCompleted ? _handleNextLesson : _runPythonCode),
+                    icon: _isRunning
                         ? const SizedBox(
                             width: 16,
                             height: 16,
@@ -236,15 +362,11 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                               ),
                             ),
                           )
-                        : const Icon(Icons.play_arrow),
-                    label: Text(lesson.isCompleted ? 'Completed' : 'Run Code'),
+                        : Icon(_isCompleted ? Icons.arrow_forward : Icons.play_arrow),
+                    label: Text(_isCompleted ? 'Next' : 'Run Code'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: lesson.isCompleted
-                          ? AppColors.surfaceVariant
-                          : AppColors.primary,
-                      foregroundColor: lesson.isCompleted
-                          ? AppColors.textSecondary
-                          : Colors.white,
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
@@ -257,18 +379,17 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
     );
   }
   
- TextSpan _buildText(String content) {
+  TextSpan _buildText(String content) {
     final spans = <TextSpan>[];
     final codeRegex = RegExp(r'<code>(.*?)</code>');
     int lastMatchEnd = 0;
     final matches = codeRegex.allMatches(content);
     for (final match in matches) {
-      // Add normal text before the code
       if (match.start > lastMatchEnd) {
         final normalText = content.substring(lastMatchEnd, match.start);
         spans.addAll(_highlightQuotes(normalText));
       }
-      // Add code snippet
+
       spans.add(TextSpan(
         text: match.group(1),
         style: const TextStyle(
@@ -280,7 +401,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
       ));
       lastMatchEnd = match.end;
     }
-    // Add any remaining normal text after the last code
+
     if (lastMatchEnd < content.length) {
       final normalText = content.substring(lastMatchEnd);
       spans.addAll(_highlightQuotes(normalText));
@@ -317,4 +438,16 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
     }
     return spans;
   }
+}
+
+String _parseText(String content) {
+  content = content.replaceAll(r'\n', '\n');
+  content = content.replaceAllMapped(
+    RegExp(r'`(.*?)`'),
+    (match) {
+      return '<code>${match.group(1)}</code>';
+    },
+  );
+
+  return content;
 }
