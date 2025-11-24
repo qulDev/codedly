@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:codedly/core/l10n/generated/app_localizations.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
+import 'package:codedly/features/leaderboard/presentation/screens/leaderboard_screen.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_state.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
@@ -260,12 +261,17 @@ class HomeScreen extends ConsumerWidget {
               context,
               MaterialPageRoute(builder: (context) => const ModulesScreen()),
             );
-          } else if (index == 3) {
+          } else if (index == 2) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ProfileScreen(),
+                builder: (context) => const LeaderboardScreen(),
               ),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
