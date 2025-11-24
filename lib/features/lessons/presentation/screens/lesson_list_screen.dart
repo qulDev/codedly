@@ -152,7 +152,7 @@ class _LessonCard extends StatelessWidget {
                     ? const Icon(Icons.check, color: Colors.white, size: 20)
                     : Text(
                         '$number',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.bold,
                         ),
@@ -166,7 +166,7 @@ class _LessonCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
@@ -175,11 +175,11 @@ class _LessonCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.stars, size: 16, color: AppColors.xpGold),
+                      const Icon(Icons.stars, size: 16, color: AppColors.xpGold),
                       const SizedBox(width: 4),
                       Text(
                         '$xpReward XP',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: AppColors.xpGold,
                           fontWeight: FontWeight.w600,
@@ -190,7 +190,7 @@ class _LessonCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios,
               size: 16,
               color: AppColors.textSecondary,

@@ -34,7 +34,7 @@ class ModulesScreen extends ConsumerWidget {
                 lessonsState.modules.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : lessonsState.modules.isEmpty
-            ? Center(
+            ? const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -43,7 +43,7 @@ class ModulesScreen extends ConsumerWidget {
                       size: 64,
                       color: AppColors.textSecondary,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       'No modules available yet',
                       style: TextStyle(
@@ -132,7 +132,7 @@ class _ModuleCard extends StatelessWidget {
                   backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                   labelStyle: const TextStyle(color: AppColors.primary),
                 ),
-                Icon(Icons.arrow_forward, color: AppColors.textSecondary),
+                const Icon(Icons.arrow_forward, color: AppColors.textSecondary),
               ],
             ),
             const SizedBox(height: 12),
@@ -147,7 +147,7 @@ class _ModuleCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               description,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 16),
             Row(
@@ -168,7 +168,7 @@ class _ModuleCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   '$lessonsCompleted/$totalLessons',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
