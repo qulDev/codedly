@@ -39,5 +39,8 @@
   "correct": "Benar!",
   "incorrect": "Salah",
   "score": "Skor",
-  "congratulations": "Selamat!"
+  "congratulations": "Selamat!",
+  "leaderboardSubtitle": "Peringkat berdasarkan total XP. Selesaikan pelajaran untuk naik papan.",
+  "leaderboardTieBreaker": "Tie-breaker: siapa yang mencapai XP lebih dulu berada di atas.",
+  "leaderboardEmpty": "Belum ada peserta di papan. Selesaikan satu pelajaran untuk menempati posisi pertama!"
 }

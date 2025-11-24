@@ -159,5 +159,17 @@
   "congratulations": "Congratulations!",
   "@congratulations": {
     "description": "Congratulations message"
+  },
+  "leaderboardSubtitle": "Ranked by total XP. Finish lessons to climb the board.",
+  "@leaderboardSubtitle": {
+    "description": "Short description shown on the leaderboard hero card"
+  },
+  "leaderboardTieBreaker": "Tie-breaker: earliest time reaching that XP wins.",
+  "@leaderboardTieBreaker": {
+    "description": "Explains the tie-breaking rule for the leaderboard"
+  },
+  "leaderboardEmpty": "No learners on the board yet. Complete a lesson to claim the first spot!",
+  "@leaderboardEmpty": {
+    "description": "Empty state message for leaderboard"
   }
 }
