@@ -240,7 +240,7 @@ class HomeScreen extends ConsumerWidget {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: l10n.lessons,
+            label: l10n.home,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.quiz),
@@ -259,7 +259,7 @@ class HomeScreen extends ConsumerWidget {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ModulesScreen()),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else if (index == 2) {
             Navigator.push(
