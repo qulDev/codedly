@@ -1,5 +1,6 @@
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
+import 'package:codedly/features/leaderboard/presentation/screens/leaderboard_screen.dart';
 import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_provider.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_state.dart';
@@ -179,6 +180,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ModulesScreen()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LeaderboardScreen(),
+              ),
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
