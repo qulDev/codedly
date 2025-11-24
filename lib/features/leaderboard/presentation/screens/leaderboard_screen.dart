@@ -1,8 +1,8 @@
+import 'package:codedly/shared/widgets/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:codedly/core/l10n/generated/app_localizations.dart';
-import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/leaderboard/domain/entities/leaderboard_entry.dart';
@@ -53,43 +53,7 @@ class LeaderboardScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.surface,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondary,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 2,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: l10n.lessons,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.quiz),
-            label: l10n.practice,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.leaderboard),
-            label: l10n.leaderboard,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            label: l10n.profile,
-          ),
-        ],
-        onTap: (index) {
-          if (index == 2) return;
-          if (index == 0) {
-            Navigator.pushNamed(context, AppRoutes.modules);
-          } else if (index == 3) {
-            Navigator.pushNamed(context, AppRoutes.profile);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
-            );
-          }
-        },
-      ),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 

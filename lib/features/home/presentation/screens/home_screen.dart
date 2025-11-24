@@ -1,3 +1,4 @@
+import 'package:codedly/shared/widgets/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:codedly/core/l10n/generated/app_localizations.dart';
@@ -225,44 +226,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.surface,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondary,
-        currentIndex: 0,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: l10n.lessons,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.quiz),
-            label: l10n.practice,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.leaderboard),
-            label: l10n.leaderboard,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person),
-            label: l10n.profile,
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            return;
-          } else if (index == 2) {
-            Navigator.pushNamed(context, AppRoutes.leaderboard);
-          } else if (index == 3) {
-            Navigator.pushNamed(context, AppRoutes.profile);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
-            );
-          }
-        },
-      ),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 }

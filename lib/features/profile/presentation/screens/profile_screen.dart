@@ -1,10 +1,10 @@
-import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_provider.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_state.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_state.dart';
+import 'package:codedly/shared/widgets/custom_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -158,37 +158,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.surface,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textSecondary,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 3,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Practice'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard),
-            label: 'Leaderboard',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        onTap: (index) {
-          if (index == 3) return;
-          if (index == 0) {
-            Navigator.pushNamed(context, AppRoutes.home);
-          } else if (index == 2) {
-            Navigator.pushNamed(context, AppRoutes.leaderboard);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
-            );
-          }
-        },
-      ),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 }
+
 
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({
