@@ -53,7 +53,7 @@ class LeaderboardScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(),
+      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 2),
     );
   }
 
