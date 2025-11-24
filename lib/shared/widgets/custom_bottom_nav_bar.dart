@@ -4,8 +4,11 @@ import 'package:codedly/core/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
+  final int currentIndex;
+  
   const CustomBottomNavBar({
     super.key,
+    required this.currentIndex,
   });
 
   @override
@@ -15,7 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
       selectedItemColor: AppColors.primary,
       unselectedItemColor: AppColors.textSecondary,
       type: BottomNavigationBarType.fixed,
-      currentIndex: 3,
+      currentIndex: currentIndex,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Practice'),
@@ -23,15 +26,38 @@ class CustomBottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
       onTap: (index) {
-        if (index == 3) return;
-        if (index == 0) {
-          Navigator.pushNamed(context, AppRoutes.home);
-        } else if (index == 2) {
-          Navigator.pushNamed(context, AppRoutes.leaderboard);
-        } else {
+        if (index == currentIndex) return;
+        
+        switch (index) {
+          case 0:
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.home,
+              (route) => false,
+            );
+            break;
+          case 1:
+            // ...
+            break;
+          case 2:
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.leaderboard,
+              (route) => false,
+            );
+            break;
+          case 3:
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRoutes.profile,
+              (route) => false,
+            );
+            break;
+          default:
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
           );
+          break;
         }
       },
     );
