@@ -39,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
                 floating: true,
                 title: Row(
                   children: [
-                    Icon(Icons.code, color: AppColors.primary, size: 28),
+                    const Icon(Icons.code, color: AppColors.primary, size: 28),
                     const SizedBox(width: 8),
                     Text(
                       l10n.appTitle,
@@ -119,9 +119,9 @@ class HomeScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Continue Learning',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -194,15 +194,15 @@ class HomeScreen extends ConsumerWidget {
                           color: AppColors.primary.withValues(alpha: 0.3),
                         ),
                       ),
-                      child: Column(
+                      child: const Column(
                         children: [
                           Icon(
                             Icons.construction,
                             size: 48,
                             color: AppColors.warning,
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
+                          SizedBox(height: 16),
+                          Text(
                             'More Modules Coming Soon!',
                             style: TextStyle(
                               fontSize: 18,
@@ -210,7 +210,7 @@ class HomeScreen extends ConsumerWidget {
                               color: AppColors.textPrimary,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             'We\'re working on more Python lessons and quizzes for you.',
                             textAlign: TextAlign.center,
@@ -267,7 +267,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -317,7 +317,7 @@ class _LessonModuleCard extends StatelessWidget {
                   backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                   labelStyle: const TextStyle(color: AppColors.primary),
                 ),
-                Icon(Icons.arrow_forward, color: AppColors.textSecondary),
+                const Icon(Icons.arrow_forward, color: AppColors.textSecondary),
               ],
             ),
             const SizedBox(height: 12),
@@ -332,7 +332,7 @@ class _LessonModuleCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               description,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 16),
             Row(
@@ -353,7 +353,7 @@ class _LessonModuleCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   '$lessonsCompleted/$totalLessons',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
