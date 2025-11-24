@@ -58,3 +58,6 @@ lib/core/l10n/generated/
 # Hive
 *.hive
 *.lock
+
+
+query/
