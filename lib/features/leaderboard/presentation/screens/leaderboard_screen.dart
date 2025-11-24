@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:codedly/core/l10n/generated/app_localizations.dart';
+import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/leaderboard/domain/entities/leaderboard_entry.dart';
 import 'package:codedly/features/leaderboard/presentation/providers/leaderboard_provider.dart';
 import 'package:codedly/features/leaderboard/presentation/providers/leaderboard_state.dart';
-import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
-import 'package:codedly/features/profile/presentation/screens/profile_screen.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
@@ -81,15 +80,9 @@ class LeaderboardScreen extends ConsumerWidget {
         onTap: (index) {
           if (index == 2) return;
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ModulesScreen()),
-            );
+            Navigator.pushNamed(context, AppRoutes.modules);
           } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
+            Navigator.pushNamed(context, AppRoutes.profile);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),

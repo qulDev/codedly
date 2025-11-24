@@ -8,8 +8,12 @@ import 'package:codedly/features/auth/presentation/providers/auth_provider.dart'
 import 'package:codedly/features/auth/presentation/providers/auth_state.dart';
 import 'package:codedly/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:codedly/features/auth/presentation/screens/onboarding_screen.dart';
+import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/features/home/presentation/screens/home_screen.dart';
+import 'package:codedly/features/leaderboard/presentation/screens/leaderboard_screen.dart';
 import 'package:codedly/shared/widgets/loading_indicator.dart';
+import 'package:codedly/features/profile/presentation/screens/profile_screen.dart';
+import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
 
 /// The root widget of the Codedly application.
 ///
@@ -27,6 +31,12 @@ class CodedlyApp extends ConsumerWidget {
       // Theme
       theme: AppTheme.darkTheme,
       navigatorKey: navigatorKey,
+      routes: {
+        AppRoutes.home: (_) => const HomeScreen(),
+        AppRoutes.profile: (_) => const ProfileScreen(),
+        AppRoutes.leaderboard: (_) => const LeaderboardScreen(),
+        AppRoutes.modules: (_) => const ModulesScreen(),
+      },
 
       // Localization
       localizationsDelegates: const [

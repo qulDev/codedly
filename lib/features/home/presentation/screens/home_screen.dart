@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:codedly/core/l10n/generated/app_localizations.dart';
+import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
-import 'package:codedly/features/leaderboard/presentation/screens/leaderboard_screen.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_state.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
-import 'package:codedly/features/profile/presentation/screens/profile_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -54,12 +53,7 @@ class HomeScreen extends ConsumerWidget {
                   IconButton(
                     icon: const Icon(Icons.person),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
+                      Navigator.pushNamed(context, AppRoutes.profile);
                     },
                   ),
                 ],
@@ -240,7 +234,7 @@ class HomeScreen extends ConsumerWidget {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: l10n.home,
+            label: l10n.lessons,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.quiz),
@@ -257,22 +251,11 @@ class HomeScreen extends ConsumerWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+            return;
           } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LeaderboardScreen(),
-              ),
-            );
+            Navigator.pushNamed(context, AppRoutes.leaderboard);
           } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
+            Navigator.pushNamed(context, AppRoutes.profile);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),

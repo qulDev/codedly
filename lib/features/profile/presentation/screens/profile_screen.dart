@@ -1,6 +1,6 @@
+import 'package:codedly/core/navigation/routes.dart';
 import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
-import 'package:codedly/features/lessons/presentation/screens/modules_screen.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_provider.dart';
 import 'package:codedly/features/profile/presentation/providers/profile_settings_state.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
@@ -176,17 +176,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         onTap: (index) {
           if (index == 3) return;
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+            Navigator.pushNamed(context, AppRoutes.home);
           } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LeaderboardScreen(),
-              ),
-            );
+            Navigator.pushNamed(context, AppRoutes.leaderboard);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Tab ${index + 1} coming soon! 🚀')),
