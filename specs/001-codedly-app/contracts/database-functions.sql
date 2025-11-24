@@ -218,5 +218,40 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 GRANT EXECUTE ON FUNCTION complete_quiz(UUID, UUID, INTEGER, INTEGER) TO authenticated;
 
 -- ============================================================================
+-- FUNCTION: Get leaderboard ordered by XP with tie-breaker on earliest reach
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION get_leaderboard(limit_count INTEGER DEFAULT 50)
+RETURNS TABLE (
+    user_id UUID,
+    display_name TEXT,
+    total_xp INTEGER,
+    current_level INTEGER,
+    lessons_completed INTEGER,
+    streak_count INTEGER,
+    xp_reached_at TIMESTAMPTZ,
+    rank INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        us.user_id,
+        COALESCE(up.display_name, up.email, 'Learner')::text AS display_name,
+        us.total_xp,
+        us.current_level,
+        us.lessons_completed,
+        us.streak_count,
+        us.updated_at AS xp_reached_at,
+        ROW_NUMBER() OVER (ORDER BY us.total_xp DESC, us.updated_at ASC)::integer AS rank
+    FROM user_stats us
+    JOIN user_profiles up ON up.id = us.user_id
+    ORDER BY us.total_xp DESC, us.updated_at ASC
+    LIMIT COALESCE(limit_count, 50);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+GRANT EXECUTE ON FUNCTION get_leaderboard(INTEGER) TO authenticated;
+
+-- ============================================================================
 -- END OF FILE
 -- ============================================================================
