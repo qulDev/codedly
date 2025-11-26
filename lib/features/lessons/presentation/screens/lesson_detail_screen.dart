@@ -329,13 +329,54 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Hints feature coming soon! 💡'),
-                        ),
-                      );
-                    },
+                      onPressed: () async {
+                      final lessonsState = ref.read(lessonsProvider);
+                      final authState = ref.read(authProvider);
+                      final lesson = lessonsState.currentLesson;
+
+                      if (lesson == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('No lesson loaded to show a hint.'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      final languageCode = authState.user?.languagePreference ?? 'en';
+
+                      final LessonsRepository lessonsRepository = getIt<LessonsRepository>();
+                                          
+                      final Either<dynamic, List<LessonHint>> result = await lessonsRepository.getHintsByLesson(lesson.id);
+
+                      result.fold(
+                        (_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to load hint. Please try again.'),
+                            ),
+                          );
+                        },
+                        (hints) {
+                          if (hints.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('No hints available for this lesson yet.'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          final hintText =
+                              hints.first.getHintText(languageCode);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('💡 Hint: $hintText'),
+                              duration: const Duration(seconds: 8),
+                            ),
+                          );
+                        },
                     icon: const Icon(Icons.lightbulb_outline),
                     label: const Text('Hint'),
                     style: OutlinedButton.styleFrom(
