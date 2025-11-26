@@ -6,7 +6,11 @@ import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:dartz/dartz.dart';
 import 'dart:convert';
+import 'package:codedly/core/di/injection.dart';
+import 'package:codedly/features/lessons/domain/entities/lesson_hint.dart';
+import 'package:codedly/features/lessons/domain/repositories/lessons_repository.dart';
 
 class LessonDetailScreen extends ConsumerStatefulWidget {
   final int lessonIndex;
