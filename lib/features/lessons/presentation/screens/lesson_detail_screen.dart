@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_python_bridge/flutter_python_bridge.dart' show PythonBridge;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:codedly/core/theme/colors.dart';
-import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
-import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:dartz/dartz.dart';
 import 'dart:convert';
+
+import 'package:codedly/core/theme/colors.dart';
 import 'package:codedly/core/di/injection.dart';
+import 'package:codedly/features/auth/presentation/providers/auth_provider.dart';
 import 'package:codedly/features/lessons/domain/entities/lesson_hint.dart';
 import 'package:codedly/features/lessons/domain/repositories/lessons_repository.dart';
+import 'package:codedly/features/lessons/presentation/providers/lessons_provider.dart';
 
 class LessonDetailScreen extends ConsumerStatefulWidget {
   final int lessonIndex;
@@ -333,7 +334,7 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                      onPressed: () async {
+                    onPressed: () async {
                       final lessonsState = ref.read(lessonsProvider);
                       final authState = ref.read(authProvider);
                       final lesson = lessonsState.currentLesson;
@@ -347,11 +348,15 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                         return;
                       }
 
-                      final languageCode = authState.user?.languagePreference ?? 'en';
+                      final languageCode =
+                          authState.user?.languagePreference ?? 'en';
 
-                      final LessonsRepository lessonsRepository = getIt<LessonsRepository>();
-                                          
-                      final Either<dynamic, List<LessonHint>> result = await lessonsRepository.getHintsByLesson(lesson.id);
+                      final LessonsRepository lessonsRepository =
+                          getIt<LessonsRepository>();
+
+                      // Fetch hints for the current lesson
+                      final Either<dynamic, List<LessonHint>> result =
+                          await lessonsRepository.getHintsByLesson(lesson.id);
 
                       result.fold(
                         (_) {
@@ -381,6 +386,8 @@ class _LessonDetailScreenState extends ConsumerState<LessonDetailScreen> {
                             ),
                           );
                         },
+                      );
+                    },
                     icon: const Icon(Icons.lightbulb_outline),
                     label: const Text('Hint'),
                     style: OutlinedButton.styleFrom(
