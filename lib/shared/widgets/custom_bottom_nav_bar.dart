@@ -12,8 +12,8 @@ class CustomBottomNavBar extends StatelessWidget {
 
   static const _routes = {
     0: AppRoutes.home,
+    1: AppRoutes.quiz,
     2: AppRoutes.leaderboard,
-    // ...
     3: AppRoutes.profile,
   };
 
@@ -46,7 +46,7 @@ class CustomBottomNavBar extends StatelessWidget {
       onTap: (index) => _onItemTapped(context, index),
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Practice'),
+        BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Quiz'),
         BottomNavigationBarItem(icon: Icon(Icons.leaderboard), label: 'Leaderboard'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
