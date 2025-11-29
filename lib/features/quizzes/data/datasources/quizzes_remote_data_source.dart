@@ -32,10 +32,12 @@ class QuizzesRemoteDataSource {
 
       // Ambil quiz count per module tanpa loop query
       final quizzes = await _supabase
-          .from('quizzes')
-          .select('id')
-          .eq('is_published', true)
-          .inFilter('module_id', moduleIds);
+      .from('quizzes')
+      .select('id, module_id')
+      .eq('is_published', true)
+      .inFilter('module_id', moduleIds);
+      print("📌 quizzes data: $quizzes");
+
 
       // Ambil completed quizzes dalam satu query
       final completed = await _supabase
