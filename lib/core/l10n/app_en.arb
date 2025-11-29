@@ -104,9 +104,13 @@
   "@lessons": {
     "description": "Lessons tab label"
   },
-  "practice": "Practice",
-  "@practice": {
-    "description": "Practice tab label"
+  "quizzes": "Quizzes",
+  "@quizzes": {
+    "description": "Quizzes tab label"
+  },
+  "noQuizzesAvailable": "noQuizzesAvailable",
+  "@noQuizzesAvailable": {
+    "description": "No quizzes available yet tab label"
   },
   "leaderboard": "Leaderboard",
   "@leaderboard": {

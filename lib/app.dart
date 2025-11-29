@@ -1,3 +1,4 @@
+import 'package:codedly/features/quizzes/presentation/screens/modules_screen.dart';
 import 'package:codedly/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +36,8 @@ class CodedlyApp extends ConsumerWidget {
         AppRoutes.home: (_) => const HomeScreen(),
         AppRoutes.profile: (_) => const ProfileScreen(),
         AppRoutes.leaderboard: (_) => const LeaderboardScreen(),
-        AppRoutes.modules: (_) => const ModulesScreen(),
+        // AppRoutes.modules: (_) => const ModulesScreen(),
+        AppRoutes.quiz: (_) => const QuizzesModuleScreen(),
       },
 
       // Localization
