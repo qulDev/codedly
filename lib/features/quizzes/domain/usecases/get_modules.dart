@@ -5,12 +5,12 @@ import 'package:codedly/core/usecases/usecase.dart';
 import 'package:codedly/features/quizzes/domain/entities/module.dart';
 import 'package:codedly/features/quizzes/domain/repositories/quizzes_repository.dart';
 
-/// Use case for getting all published modules.
+/// Use case for getting all published quiz modules.
 @lazySingleton
-class GetModules implements UseCase<List<Module>, NoParams> {
+class GetQuizModules implements UseCase<List<Module>, NoParams> {
   final QuizzesRepository repository;
 
-  GetModules(this.repository);
+  GetQuizModules(this.repository);
 
   @override
   Future<Either<Failure, List<Module>>> call(NoParams params) async {

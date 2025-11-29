@@ -1,132 +1,88 @@
 import 'package:equatable/equatable.dart';
 
-/// Quizzes entity
+/// Quiz entity - represents a quiz container within a module
 class Quizzes extends Equatable {
   final String id;
   final String moduleId;
   final String titleEn;
   final String titleId;
-  final String contentEn;
-  final String contentId;
-
-  /// List of options per language
-  final List<String> optionsEn;
-  final List<String> optionsId;
-
-  /// Index of the correct answer in options list
-  final int correctAnswerIndex;
-
-  final String? codeTemplate;
-  final String? expectedOutput;
-  final String validationType;
-  final String? validationPattern;
-
+  final String? descriptionEn;
+  final String? descriptionId;
   final int orderIndex;
-  final int xpReward;
-  final int? estimatedDurationMinutes;
-
+  final int passingScorePercentage;
+  final int xpPerCorrectAnswer;
+  final int bonusXpForPerfect;
   final bool isPublished;
   final bool isCompleted;
-
-  /// Optional hint or additional info
-  final String? hint;
 
   const Quizzes({
     required this.id,
     required this.moduleId,
     required this.titleEn,
     required this.titleId,
-    required this.contentEn,
-    required this.contentId,
-    required this.optionsEn,
-    required this.optionsId,
-    required this.correctAnswerIndex,
-    this.codeTemplate,
-    this.expectedOutput,
-    required this.validationType,
-    this.validationPattern,
+    this.descriptionEn,
+    this.descriptionId,
     required this.orderIndex,
-    required this.xpReward,
-    this.estimatedDurationMinutes,
+    required this.passingScorePercentage,
+    required this.xpPerCorrectAnswer,
+    required this.bonusXpForPerfect,
     required this.isPublished,
     this.isCompleted = false,
-    this.hint,
   });
 
   String getTitle(String languageCode) =>
       languageCode == 'id' ? titleId : titleEn;
 
-  String getContent(String languageCode) =>
-      languageCode == 'id' ? contentId : contentEn;
+  String? getDescription(String languageCode) =>
+      languageCode == 'id' ? descriptionId : descriptionEn;
 
-  List<String> getOptions(String languageCode) =>
-      languageCode == 'id' ? optionsId : optionsEn;
+  /// Calculate total XP reward based on number of questions
+  int get xpReward => xpPerCorrectAnswer * 5 + bonusXpForPerfect; // Estimate
 
   Quizzes copyWith({
     String? id,
     String? moduleId,
     String? titleEn,
     String? titleId,
-    String? contentEn,
-    String? contentId,
-    List<String>? optionsEn,
-    List<String>? optionsId,
-    int? correctAnswerIndex,
-    String? codeTemplate,
-    String? expectedOutput,
-    String? validationType,
-    String? validationPattern,
+    String? descriptionEn,
+    String? descriptionId,
     int? orderIndex,
-    int? xpReward,
-    int? estimatedDurationMinutes,
+    int? passingScorePercentage,
+    int? xpPerCorrectAnswer,
+    int? bonusXpForPerfect,
     bool? isPublished,
     bool? isCompleted,
-    String? hint,
   }) {
     return Quizzes(
       id: id ?? this.id,
       moduleId: moduleId ?? this.moduleId,
       titleEn: titleEn ?? this.titleEn,
       titleId: titleId ?? this.titleId,
-      contentEn: contentEn ?? this.contentEn,
-      contentId: contentId ?? this.contentId,
-      optionsEn: optionsEn ?? this.optionsEn,
-      optionsId: optionsId ?? this.optionsId,
-      correctAnswerIndex: correctAnswerIndex ?? this.correctAnswerIndex,
-      codeTemplate: codeTemplate ?? this.codeTemplate,
-      expectedOutput: expectedOutput ?? this.expectedOutput,
-      validationType: validationType ?? this.validationType,
-      validationPattern: validationPattern ?? this.validationPattern,
+      descriptionEn: descriptionEn ?? this.descriptionEn,
+      descriptionId: descriptionId ?? this.descriptionId,
       orderIndex: orderIndex ?? this.orderIndex,
-      xpReward: xpReward ?? this.xpReward,
-      estimatedDurationMinutes:
-          estimatedDurationMinutes ?? this.estimatedDurationMinutes,
+      passingScorePercentage:
+          passingScorePercentage ?? this.passingScorePercentage,
+      xpPerCorrectAnswer: xpPerCorrectAnswer ?? this.xpPerCorrectAnswer,
+      bonusXpForPerfect: bonusXpForPerfect ?? this.bonusXpForPerfect,
       isPublished: isPublished ?? this.isPublished,
       isCompleted: isCompleted ?? this.isCompleted,
-      hint: hint ?? this.hint,
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        moduleId,
-        titleEn,
-        titleId,
-        contentEn,
-        contentId,
-        optionsEn,
-        optionsId,
-        correctAnswerIndex,
-        codeTemplate,
-        expectedOutput,
-        validationType,
-        validationPattern,
-        orderIndex,
-        xpReward,
-        estimatedDurationMinutes,
-        isPublished,
-        isCompleted,
-        hint,
-      ];
+    id,
+    moduleId,
+    titleEn,
+    titleId,
+    descriptionEn,
+    descriptionId,
+    orderIndex,
+    passingScorePercentage,
+    xpPerCorrectAnswer,
+    bonusXpForPerfect,
+    isPublished,
+    isCompleted,
+  ];
 }

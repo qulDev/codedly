@@ -6,24 +6,26 @@ import 'dart:async';
 import 'package:codedly/core/di/injection.dart';
 import 'package:codedly/core/usecases/usecase.dart';
 import 'package:codedly/features/quizzes/domain/usecases/get_quizzes.dart';
+import 'package:codedly/features/quizzes/domain/usecases/get_questions.dart';
 import 'package:codedly/features/quizzes/domain/usecases/complete_quizzes.dart';
 import 'package:codedly/features/quizzes/presentation/providers/quizzes_state.dart';
 import 'package:codedly/features/stats/presentation/providers/stats_provider.dart';
 
-/// Notifier for quizzes and modules state.
 class QuizzesNotifier extends StateNotifier<QuizzesState> {
-  final GetModules getModulesUseCase;
+  final GetQuizModules getModulesUseCase;
   final GetQuizzesByModule getQuizzesUseCase;
+  final GetQuestionsByQuiz getQuestionsUseCase;
   final CompleteQuiz completeQuizUseCase;
   final Ref _ref;
 
   QuizzesNotifier({
     required this.getModulesUseCase,
     required this.getQuizzesUseCase,
+    required this.getQuestionsUseCase,
     required this.completeQuizUseCase,
     required Ref ref,
-  })  : _ref = ref,
-        super(const QuizzesState()) {
+  }) : _ref = ref,
+       super(const QuizzesState()) {
     loadModules();
   }
 
@@ -65,10 +67,32 @@ class QuizzesNotifier extends StateNotifier<QuizzesState> {
     );
   }
 
+  Future<void> loadQuestions(String quizId) async {
+    state = state.copyWith(status: QuizzesStatus.loading, clearQuestions: true);
+
+    final result = await getQuestionsUseCase(
+      GetQuestionsByQuizParams(quizId: quizId),
+    );
+
+    result.fold(
+      (failure) => state = state.copyWith(
+        status: QuizzesStatus.error,
+        errorMessage: failure.message,
+      ),
+      (questions) => state = state.copyWith(
+        status: QuizzesStatus.loaded,
+        questions: questions,
+      ),
+    );
+  }
+
   /// Sets the current quiz being viewed.
   void setCurrentQuiz(int index) {
     if (index >= 0 && index < state.quizzes.length) {
-      state = state.copyWith(currentQuiz: state.quizzes[index]);
+      state = state.copyWith(
+        currentQuiz: state.quizzes[index],
+        clearQuestions: true,
+      );
     }
   }
 
@@ -105,8 +129,8 @@ class QuizzesNotifier extends StateNotifier<QuizzesState> {
             final cappedCompleted = module.totalQuizzes == 0
                 ? newCompleted
                 : newCompleted > module.totalQuizzes
-                    ? module.totalQuizzes
-                    : newCompleted;
+                ? module.totalQuizzes
+                : newCompleted;
             return module.copyWith(quizzesCompleted: cappedCompleted);
           }
           return module;
@@ -132,13 +156,14 @@ class QuizzesNotifier extends StateNotifier<QuizzesState> {
 }
 
 /// Provider for quizzes and modules.
-final quizzesProvider = StateNotifierProvider<QuizzesNotifier, QuizzesState>(
-  (ref) {
-    return QuizzesNotifier(
-      getModulesUseCase: getIt<GetModules>(),
-      getQuizzesUseCase: getIt<GetQuizzesByModule>(),
-      completeQuizUseCase: getIt<CompleteQuiz>(),
-      ref: ref,
-    );
-  },
-);
+final quizzesProvider = StateNotifierProvider<QuizzesNotifier, QuizzesState>((
+  ref,
+) {
+  return QuizzesNotifier(
+    getModulesUseCase: getIt<GetQuizModules>(),
+    getQuizzesUseCase: getIt<GetQuizzesByModule>(),
+    getQuestionsUseCase: getIt<GetQuestionsByQuiz>(),
+    completeQuizUseCase: getIt<CompleteQuiz>(),
+    ref: ref,
+  );
+});

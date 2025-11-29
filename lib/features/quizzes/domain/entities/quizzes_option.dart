@@ -1,35 +1,63 @@
 import 'package:equatable/equatable.dart';
 
-/// Quiz option entity.
-/// 
-/// Represents selectable answer options for a quiz question.
-class QuizOption extends Equatable {
-  /// List of options in English.
+/// Quiz Question entity.
+///
+/// Represents an individual question within a quiz.
+class QuizQuestion extends Equatable {
+  final String id;
+  final String quizId;
+  final String questionTextEn;
+  final String questionTextId;
   final List<String> optionsEn;
-
-  /// List of options in Indonesian.
   final List<String> optionsId;
-
-  /// Correct answer index in the options list.
   final int correctAnswerIndex;
+  final String? explanationEn;
+  final String? explanationId;
+  final int orderIndex;
 
-  const QuizOption({
+  const QuizQuestion({
+    required this.id,
+    required this.quizId,
+    required this.questionTextEn,
+    required this.questionTextId,
     required this.optionsEn,
     required this.optionsId,
     required this.correctAnswerIndex,
+    this.explanationEn,
+    this.explanationId,
+    required this.orderIndex,
   });
 
-  /// Returns localized list of options based on language preference.
+  String getQuestionText(String languageCode) {
+    return languageCode == 'id' ? questionTextId : questionTextEn;
+  }
+
   List<String> getOptions(String languageCode) {
     return languageCode == 'id' ? optionsId : optionsEn;
   }
 
-  /// Returns the correct answer text based on language preference.
+  String? getExplanation(String languageCode) {
+    return languageCode == 'id' ? explanationId : explanationEn;
+  }
+
   String getCorrectAnswer(String languageCode) {
     final list = getOptions(languageCode);
     return list[correctAnswerIndex];
   }
 
   @override
-  List<Object?> get props => [optionsEn, optionsId, correctAnswerIndex];
+  List<Object?> get props => [
+    id,
+    quizId,
+    questionTextEn,
+    questionTextId,
+    optionsEn,
+    optionsId,
+    correctAnswerIndex,
+    explanationEn,
+    explanationId,
+    orderIndex,
+  ];
 }
+
+typedef QuizOption = QuizQuestion;
