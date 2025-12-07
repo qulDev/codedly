@@ -4,9 +4,9 @@ A gamified mobile learning platform for Python programming, built with Flutter a
 
 ## 🎯 Project Status
 
-**Current Phase:** Phase 3 Complete - Authentication & Home Dashboard  
-**Version:** 0.3.0 (Development)  
-**Last Updated:** October 31, 2025
+**Current Phase:** Phase 4 Complete - Quizzes & Leaderboard  
+**Version:** 0.4.0 (Development)  
+**Last Updated:** December 7, 2025
 
 ### ✅ Completed Features
 
@@ -64,20 +64,36 @@ A gamified mobile learning platform for Python programming, built with Flutter a
   - XP/Level/Streak tracking ready
   - Network connectivity checking
 
+#### Phase 4: Quizzes & Leaderboard
+
+- ✅ **Quizzes System**
+  - Module & quiz listing with progress (user_progress)
+  - Quiz questions (quiz_questions) with multi-language text and options
+  - Scoring, pass/fail, XP rewards, streak update, XP history (xp_records)
+  - Completion tracking + attempts_count updates
+  - RLS-safe Supabase reads via published filters
+- ✅ **Leaderboard**
+  - XP-based ranking with tie-breaker (earlier XP reached)
+  - RPC `get_leaderboard` integration
+  - UI with badges, retry, pull-to-refresh, inline error banner
+- ✅ **Navigation & Routing**
+  - Named routes to avoid circular imports
+  - Bottom navigation across Home / Lessons / Leaderboard / Profile
+
 ## 🛠 Tech Stack
 
 ### Frontend
 
 - **Framework:** Flutter 3.x (Dart 3.9.2)
-- **State Management:** flutter_riverpod 2.6.1
+- **State Management:** flutter_riverpod 2.5.x
 - **Architecture:** Clean Architecture
 - **Functional Programming:** dartz 0.10.1 (Either<Failure, Success>)
-- **Dependency Injection:** get_it 7.7.0 + injectable 2.5.2
-- **Local Storage:** Hive 2.2.3
+- **Dependency Injection:** get_it 7.7.0 + injectable 2.6.x
+- **Local Storage:** Hive 2.2.x
 
 ### Backend
 
-- **BaaS:** Supabase (supabase_flutter 2.10.3)
+- **BaaS:** Supabase (supabase_flutter 2.5.x)
 - **Database:** PostgreSQL with Row Level Security (RLS)
 
 ## 🗄 Database Schema
@@ -114,7 +130,7 @@ A gamified mobile learning platform for Python programming, built with Flutter a
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/qulDev/codedly.git
    cd codedly
    ```
 
@@ -132,8 +148,9 @@ A gamified mobile learning platform for Python programming, built with Flutter a
 4. **Set up Supabase**
 
    - Create a new Supabase project
-   - Run `specs/001-codedly-app/contracts/database-schema.sql` in SQL Editor
-   - Run `specs/001-codedly-app/contracts/database-functions.sql` in SQL Editor (NEW!)
+   - Run `query/database-schema.sql` in SQL Editor
+   - Run `query/database-function.sql` in SQL Editor
+   - Apply any RLS fixes in `FIX_RLS_ERROR.md` or `ULTIMATE_RLS_FIX.sql` if needed
 
 5. **Run code generation**
 
@@ -172,10 +189,33 @@ int calculateLevel(int totalXp) {
 
 ## 📝 Next Steps
 
-1. **Lessons Feature** - Build lesson list, code editor, Python execution
-2. **Quiz System** - Multiple choice questions, scoring, results
-3. **Profile Screen** - User details, achievements, settings
-4. **Gamification UI** - Level progress bars, XP animations
+1. **Lesson Coding Flow** - Code editor UX, validation runners, richer hints
+2. **Profile & Achievements** - Badges, history, account settings
+3. **Production Auth** - Google OAuth keys + deep links
+4. **Offline & Caching** - Hive/SP caching for modules/quizzes
+5. **Testing & CI** - Widget tests, integration tests, pipeline
+
+## 👥 Contributors
+
+<p align="left">
+  <a href="https://github.com/qulDev" title="Contributor 1">
+    <img src="https://avatars.githubusercontent.com/u/48212340?v=4" alt="Contributor 1" width="72" height="72" style="border-radius:50%;" />
+  </a>
+  <a href="https://github.com/VXGN" title="Contributor 2">
+    <img src="https://avatars.githubusercontent.com/u/116474723?s=64&v=4" alt="Contributor 2" width="72" height="72" style="border-radius:50%;" />
+  </a>
+  <a href="https://github.com/Fanndev" title="Contributor 3">
+    <img src="https://avatars.githubusercontent.com/u/101954078?s=64&v=4" alt="Contributor 3" width="72" height="72" style="border-radius:50%;" />
+  </a>
+</p>
+
+## ☕ Buy Me a Coffee
+
+<p>
+  <a href="http://buymeacoffee.com/rqull" target="_blank" rel="noreferrer">
+    <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="50" />
+  </a>
+</p>
 
 ---
 
